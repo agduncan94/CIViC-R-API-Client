@@ -4,14 +4,14 @@
 \alias{.commonDetailEndpoint}
 \title{Handle common detail endpoints}
 \usage{
-.commonDetailEndpoint(type, id)
+.commonDetailEndpoint(type, id, metadataType = NULL)
 }
 \arguments{
 \item{type}{Type of detail endpoint}
 
 \item{id}{The internal CIViC ID}
 
-\item{count}{the number of assertions to retrieve}
+\item{metadataType}{Optional type for base detail endpoints}
 }
 \description{
 Handle common detail endpoints

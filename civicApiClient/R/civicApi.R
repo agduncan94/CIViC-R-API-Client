@@ -43,6 +43,28 @@ getGene <- function(id, identifier_type = "civic_id") {
   return(.createReturnStructure(gene, url, response))
 }
 
+#' Get a specific gene metadata
+#'
+#' Retrieve metadata for a specific gene from the CIViC DB
+#' @param id ID of the gene of interest
+#' @param identifier_type Type of gene identifier (entrez_id, entrez_symbol, civic_id)
+#' @param type Type of metadata (comments, suggested_changes, revisions, variants)
+#' @return An S3 Object of type civic_api containing the content, url, and response
+#' @export
+#' @keywords gene, metadata
+#' @examples
+#' getGeneMetadata(id = 1, type = "comments")
+#' getGeneMetadata(id = "ALK", type = "comments", identifier_type = "entrez_symbol")
+#' getGeneMetadata(id = 238, type = "comments", identifier_type = "entrez_id")
+getGeneMetadata <- function(id, type, identifier_type = "civic_id") {
+  url <- modify_url(baseAPIUrl, path = paste("api/genes", id, type, sep = "/"))
+  response <- GET(url, accept_json(), userAgent, query = list("identifier_type" = identifier_type))
+  .verifyJsonResponse(response)
+  .handleFailure(response)
+  gene <- content(response, "parsed")
+  return(.createReturnStructure(gene, url, response))
+}
+
 #' Get a list of variants
 #'
 #' Retrieve all variants from the CIViC DB
@@ -68,6 +90,20 @@ getAllVariants <- function(page = 1, count = 25) {
 #' getVariant(id = 1)
 getVariant <- function(id) {
   return(.commonDetailEndpoint("variants", id))
+}
+
+#' Get a specific variant metadata information
+#'
+#' Retrieve metadata information for a specific variant from the CIViC DB
+#' @param id Internal CIViC ID of the variant of interest
+#' @param type Type of metadata (comments, suggested_changes, revisions, evidence_items)
+#' @return An S3 Object of type civic_api containing the content, url, and response
+#' @export
+#' @keywords variant, metadata
+#' @examples
+#' getVariantMetadata(id = 1, type = "comments")
+getVariantMetadata <- function(id, type) {
+  return(.commonDetailEndpoint("variants", id, type))
 }
 
 #' Get a list of evidence items
@@ -97,6 +133,20 @@ getEvidenceItem <- function(id) {
   return(.commonDetailEndpoint("evidence_items", id))
 }
 
+#' Get a specific evidence item metadata information
+#'
+#' Retrieve metadata information for a specific evidence item from the CIViC DB
+#' @param id Internal CIViC ID of the evidence item of interest
+#' @param type Type of metadata (comments, suggested_changes, revisions)
+#' @return An S3 Object of type civic_api containing the content, url, and response
+#' @export
+#' @keywords evidence item, metadata
+#' @examples
+#' getEvidenceItemMetadata(id = 1, type = "comments")
+getEvidenceItemMetadata <- function(id, type) {
+  return(.commonDetailEndpoint("evidence_items", id, type))
+}
+
 #' Get a list of variant groups
 #'
 #' Retrieve all variant groups from the CIViC DB
@@ -122,6 +172,20 @@ getAllVariantGroups <- function(page = 1, count = 25) {
 #' getVariantGroup(id = 1)
 getVariantGroup <- function(id) {
   return(.commonDetailEndpoint("variant_groups", id))
+}
+
+#' Get a specific variant group metadata information
+#'
+#' Retrieve metadata information for a specific variant group from the CIViC DB
+#' @param id Internal CIViC ID of the variant group of interest
+#' @param type Type of metadata (comments, suggested_changes, revisions)
+#' @return An S3 Object of type civic_api containing the content, url, and response
+#' @export
+#' @keywords variant group, metadata
+#' @examples
+#' getVariantGroupMetadata(id = 1, type = "comments")
+getVariantGroupMetadata <- function(id, type) {
+  return(.commonDetailEndpoint("variant_groups", id, type))
 }
 
 #' Get a list of assertions
@@ -151,13 +215,27 @@ getAssertion <- function(id) {
   return(.commonDetailEndpoint("assertions", id))
 }
 
+#' Get a specific assertion metadata information
+#'
+#' Retrieve metadata information for a specific variant group from the CIViC DB
+#' @param id Internal CIViC ID of the assertion of interest
+#' @param type Type of metadata (comments, suggested_changes, revisions)
+#' @return An S3 Object of type civic_api containing the content, url, and response
+#' @export
+#' @keywords assertion, metadata
+#' @examples
+#' getAssertionMetadata(id = 1, type = "comments")
+getAssertionMetadata <- function(id, type) {
+  return(.commonDetailEndpoint("assertions", id, type))
+}
+
 #' Handle common index endpoints
 #' 
 #' @param type Type of index endpoint
 #' @param page the page number to retrieve
 #' @param count the number of assertions to retrieve
 .commonIndexEndpoint <- function(type, page, count) {
-  url <- modify_url(baseAPIUrl, path = paste("api", path, sep = "/"))
+  url <- modify_url(baseAPIUrl, path = paste("api", type, sep = "/"))
   response <- GET(url, accept_json(), userAgent, query = list("page" = page, "count" = count))
   .verifyJsonResponse(response)
   .handleFailure(response)
@@ -169,9 +247,14 @@ getAssertion <- function(id) {
 #' 
 #' @param type Type of detail endpoint
 #' @param id The internal CIViC ID
-#' @param count the number of assertions to retrieve
-.commonDetailEndpoint <- function(type, id) {
-  url <- modify_url(baseAPIUrl, path = paste("api", path, id, sep = "/"))
+#' @param metadataType Optional type for base detail endpoints
+.commonDetailEndpoint <- function(type, id, metadataType=NULL) {
+  appendedPath <- paste("api", type, id, sep = "/")
+  if (!is.null(metadataType)) {
+    appendedPath <- paste(appendedPath, metadataType, sep = "/")
+  }
+  url <- modify_url(baseAPIUrl, path = appendedPath)
+  print(url)
   response <- GET(url, accept_json(), userAgent)
   .verifyJsonResponse(response)
   .handleFailure(response)
