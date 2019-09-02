@@ -19,5 +19,6 @@ Retrieve all assertions from the CIViC DB
 }
 \examples{
 getAllAssertions(count = 10)
+getAllAssertions(page = 2, count = 10)
 }
 \keyword{assertions}

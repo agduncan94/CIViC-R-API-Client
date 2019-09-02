@@ -21,6 +21,7 @@ Retrieve metadata for a specific gene from the CIViC DB
 }
 \examples{
 getGeneMetadata(id = 1, type = "comments")
+getGeneMetadata(id = 1, type = "variants")
 }
 \keyword{gene,}
 \keyword{metadata}

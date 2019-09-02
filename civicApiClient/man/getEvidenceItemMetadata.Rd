@@ -19,6 +19,7 @@ Retrieve metadata information for a specific evidence item from the CIViC DB
 }
 \examples{
 getEvidenceItemMetadata(id = 1, type = "comments")
+getEvidenceItemMetadata(id = 1, type = "revisions")
 }
 \keyword{evidence}
 \keyword{item,}

@@ -19,6 +19,7 @@ Retrieve all variant groups from the CIViC DB
 }
 \examples{
 getAllVariantGroups(count = 10)
+getAllVariantGroups(page = 2, count = 10)
 }
 \keyword{groups}
 \keyword{variant}

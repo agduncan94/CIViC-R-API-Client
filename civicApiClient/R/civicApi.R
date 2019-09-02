@@ -18,6 +18,7 @@ userAgent <- user_agent("https://github.com/agduncan94/CIViC-R-API-Client")
 #' @keywords genes
 #' @examples
 #' getAllGenes(count = 10)
+#' getAllGenes(page = 2, count = 10)
 getAllGenes <- function(page = 1, count = 25) {
   return(.commonIndexEndpoint("genes", page, count))
 }
@@ -49,6 +50,7 @@ getGene <- function(id, identifier_type = "civic_id") {
 #' @keywords gene, metadata
 #' @examples
 #' getGeneMetadata(id = 1, type = "comments")
+#' getGeneMetadata(id = 1, type = "variants")
 getGeneMetadata <- function(id, type) {
   return(.commonDetailEndpoint("genes", id, type, NULL))
 }
@@ -63,6 +65,7 @@ getGeneMetadata <- function(id, type) {
 #' @keywords variants
 #' @examples
 #' getAllVariants(count = 10)
+#' getAllVariants(page = 2, count = 10)
 getAllVariants <- function(page = 1, count = 25) {
   return(.commonIndexEndpoint("variants", page, count))
 }
@@ -90,6 +93,7 @@ getVariant <- function(id) {
 #' @keywords variant, metadata
 #' @examples
 #' getVariantMetadata(id = 1, type = "comments")
+#' getVariantMetadata(id = 1, type = "revisions")
 getVariantMetadata <- function(id, type) {
   return(.commonDetailEndpoint("variants", id, type))
 }
@@ -104,6 +108,7 @@ getVariantMetadata <- function(id, type) {
 #' @keywords evidence items
 #' @examples
 #' getAllEvidenceItems(count = 10)
+#' getAllEvidenceItems(page = 2, count = 10)
 getAllEvidenceItems <- function(page = 1, count = 25) {
   return(.commonIndexEndpoint("evidence_items", page, count))
 }
@@ -131,6 +136,7 @@ getEvidenceItem <- function(id) {
 #' @keywords evidence item, metadata
 #' @examples
 #' getEvidenceItemMetadata(id = 1, type = "comments")
+#' getEvidenceItemMetadata(id = 1, type = "revisions")
 getEvidenceItemMetadata <- function(id, type) {
   return(.commonDetailEndpoint("evidence_items", id, type))
 }
@@ -145,6 +151,7 @@ getEvidenceItemMetadata <- function(id, type) {
 #' @keywords variant groups
 #' @examples
 #' getAllVariantGroups(count = 10)
+#' getAllVariantGroups(page = 2, count = 10)
 getAllVariantGroups <- function(page = 1, count = 25) {
   return(.commonIndexEndpoint("variant_groups", page, count))
 }
@@ -172,6 +179,7 @@ getVariantGroup <- function(id) {
 #' @keywords variant group, metadata
 #' @examples
 #' getVariantGroupMetadata(id = 1, type = "comments")
+#' getVariantGroupMetadata(id = 1, type = "revisions")
 getVariantGroupMetadata <- function(id, type) {
   return(.commonDetailEndpoint("variant_groups", id, type))
 }
@@ -186,6 +194,7 @@ getVariantGroupMetadata <- function(id, type) {
 #' @keywords assertions
 #' @examples
 #' getAllAssertions(count = 10)
+#' getAllAssertions(page = 2, count = 10)
 getAllAssertions <- function(page = 1, count = 25) {
   return(.commonIndexEndpoint("assertions", page, count))
 }
@@ -213,6 +222,7 @@ getAssertion <- function(id) {
 #' @keywords assertion, metadata
 #' @examples
 #' getAssertionMetadata(id = 1, type = "comments")
+#' getAssertionMetadata(id = 1, type = "suggested_changes")
 getAssertionMetadata <- function(id, type) {
   return(.commonDetailEndpoint("assertions", id, type))
 }
