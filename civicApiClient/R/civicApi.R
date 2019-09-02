@@ -21,22 +21,34 @@ userAgent <- user_agent("https://github.com/agduncan94/CIViC-R-API-Client")
 getAllGenes <- function(page = 1, count = 25) {
   url <- modify_url(baseAPIUrl, path = "api/genes")
   response <- GET(url, accept_json(), userAgent, query = list("page" = page, "count" = count))
-  verifyJsonResponse(response)
-  handleFailure(response)
+  .verifyJsonResponse(response)
+  .handleFailure(response)
   genes <- content(response, "parsed")
-
-  return(structure(
-    list(
-      content = genes,
-      url = url,
-      response = response
-    ),
-    class = "civic_api"
-  ))
-
+  return(.createReturnStructure(genes, url, response))
 }
 
-handleFailure <- function(response) {
+#' Get a specific gene
+#'
+#' Retrieve a specific gene from the CIViC DB
+#' @param id ID of the gene of interest
+#' @param identifier_type Type of gene identifier (entrez_id, entrez_symbol, civic_id)
+#' @return An S3 Object of type civic_api containing the content, url, and response
+#' @export
+#' @keywords gene
+#' @examples
+#' getGene(id = 1)
+#' getGene(id = "ALK", identifier_type = "entrez_symbol")
+#' getGene(id = 238, identifier_type = "entrez_id")
+getGene <- function(id, identifier_type = "civic_id") {
+  url <- modify_url(baseAPIUrl, path = paste("api/genes", id, sep = "/"))
+  response <- GET(url, accept_json(), userAgent, query = list("identifier_type" = identifier_type))
+  .verifyJsonResponse(response)
+  .handleFailure(response)
+  gene <- content(response, "parsed")
+  return(.createReturnStructure(gene, url, response))
+}
+
+.handleFailure <- function(response) {
   if (http_error(response)) {
     errorResponse <- content(response, "parsed")
     stop(
@@ -50,9 +62,20 @@ handleFailure <- function(response) {
   }
 }
 
-verifyJsonResponse <- function(response) {
+.verifyJsonResponse <- function(response) {
   if (http_type(response) != "application/json") {
     stop("CIViC API did not return a JSON", call. = FALSE)
   }
+}
+
+.createReturnStructure <- function(content, url, response) {
+  return(structure(
+    list(
+      content = content,
+      url = url,
+      response = response
+    ),
+    class = "civic_api"
+  ))
 }
 
