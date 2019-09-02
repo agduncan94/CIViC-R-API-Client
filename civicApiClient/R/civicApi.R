@@ -35,12 +35,7 @@ getAllGenes <- function(page = 1, count = 25) {
 #' getGene(id = "ALK", identifier_type = "entrez_symbol")
 #' getGene(id = 238, identifier_type = "entrez_id")
 getGene <- function(id, identifier_type = "civic_id") {
-  url <- modify_url(baseAPIUrl, path = paste("api/genes", id, sep = "/"))
-  response <- GET(url, accept_json(), userAgent, query = list("identifier_type" = identifier_type))
-  .verifyJsonResponse(response)
-  .handleFailure(response)
-  gene <- content(response, "parsed")
-  return(.createReturnStructure(gene, url, response))
+  return(.commonDetailEndpoint("genes", id, NULL, list("identifier_type" = identifier_type)))
 }
 
 #' Get a specific gene metadata
@@ -57,12 +52,7 @@ getGene <- function(id, identifier_type = "civic_id") {
 #' getGeneMetadata(id = "ALK", type = "comments", identifier_type = "entrez_symbol")
 #' getGeneMetadata(id = 238, type = "comments", identifier_type = "entrez_id")
 getGeneMetadata <- function(id, type, identifier_type = "civic_id") {
-  url <- modify_url(baseAPIUrl, path = paste("api/genes", id, type, sep = "/"))
-  response <- GET(url, accept_json(), userAgent, query = list("identifier_type" = identifier_type))
-  .verifyJsonResponse(response)
-  .handleFailure(response)
-  gene <- content(response, "parsed")
-  return(.createReturnStructure(gene, url, response))
+  return(.commonDetailEndpoint("genes", id, type, list("identifier_type" = identifier_type)))
 }
 
 #' Get a list of variants
@@ -248,14 +238,18 @@ getAssertionMetadata <- function(id, type) {
 #' @param type Type of detail endpoint
 #' @param id The internal CIViC ID
 #' @param metadataType Optional type for base detail endpoints
-.commonDetailEndpoint <- function(type, id, metadataType=NULL) {
+#' @param metadataType Optional query parameters for base detail endpoints
+.commonDetailEndpoint <- function(type, id, metadataType=NULL, queryParameters=NULL) {
   appendedPath <- paste("api", type, id, sep = "/")
   if (!is.null(metadataType)) {
     appendedPath <- paste(appendedPath, metadataType, sep = "/")
   }
   url <- modify_url(baseAPIUrl, path = appendedPath)
-  print(url)
-  response <- GET(url, accept_json(), userAgent)
+  if (!is.null(queryParameters)) {
+    response <- GET(url, accept_json(), userAgent, query = queryParameters)
+  } else {
+    response <- GET(url, accept_json(), userAgent)
+  }
   .verifyJsonResponse(response)
   .handleFailure(response)
   detailResponse <- content(response, "parsed")

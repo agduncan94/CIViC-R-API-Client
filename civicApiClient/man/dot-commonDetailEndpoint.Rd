@@ -4,7 +4,8 @@
 \alias{.commonDetailEndpoint}
 \title{Handle common detail endpoints}
 \usage{
-.commonDetailEndpoint(type, id, metadataType = NULL)
+.commonDetailEndpoint(type, id, metadataType = NULL,
+  queryParameters = NULL)
 }
 \arguments{
 \item{type}{Type of detail endpoint}
@@ -12,6 +13,8 @@
 \item{id}{The internal CIViC ID}
 
 \item{metadataType}{Optional type for base detail endpoints}
+
+\item{metadataType}{Optional query parameters for base detail endpoints}
 }
 \description{
 Handle common detail endpoints
