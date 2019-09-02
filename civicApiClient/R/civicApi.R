@@ -141,6 +141,24 @@ getAllVariantGroups <- function(page = 1, count = 25) {
   return(.createReturnStructure(variantGroups, url, response))
 }
 
+#' Get a specific variant group
+#'
+#' Retrieve a specific variant group from the CIViC DB
+#' @param id Internal CIViC ID of the variant group of interest
+#' @return An S3 Object of type civic_api containing the content, url, and response
+#' @export
+#' @keywords variant group
+#' @examples
+#' getVariantGroup(id = 1)
+getVariantGroup <- function(id) {
+  url <- modify_url(baseAPIUrl, path = paste("api/variant_groups", id, sep = "/"))
+  response <- GET(url, accept_json(), userAgent)
+  .verifyJsonResponse(response)
+  .handleFailure(response)
+  variantGroup <- content(response, "parsed")
+  return(.createReturnStructure(variantGroup, url, response))
+}
+
 #' Handle failure case for httr
 #' 
 #' @param response httr error response
