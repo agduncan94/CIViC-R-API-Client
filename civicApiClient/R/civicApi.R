@@ -18,6 +18,7 @@ userAgent <- user_agent("https://github.com/agduncan94/CIViC-R-API-Client")
 #' @keywords genes
 #' @examples
 #' getAllGenes(count = 10)
+#' getAllGenes(page = 2, count = 10)
 getAllGenes <- function(page = 1, count = 25) {
   return(.commonIndexEndpoint("genes", page, count))
 }
@@ -49,10 +50,9 @@ getGene <- function(id, identifier_type = "civic_id") {
 #' @keywords gene, metadata
 #' @examples
 #' getGeneMetadata(id = 1, type = "comments")
-#' getGeneMetadata(id = "ALK", type = "comments", identifier_type = "entrez_symbol")
-#' getGeneMetadata(id = 238, type = "comments", identifier_type = "entrez_id")
-getGeneMetadata <- function(id, type, identifier_type = "civic_id") {
-  return(.commonDetailEndpoint("genes", id, type, list("identifier_type" = identifier_type)))
+#' getGeneMetadata(id = 1, type = "variants")
+getGeneMetadata <- function(id, type) {
+  return(.commonDetailEndpoint("genes", id, type, NULL))
 }
 
 #' Get a list of variants
@@ -65,6 +65,7 @@ getGeneMetadata <- function(id, type, identifier_type = "civic_id") {
 #' @keywords variants
 #' @examples
 #' getAllVariants(count = 10)
+#' getAllVariants(page = 2, count = 10)
 getAllVariants <- function(page = 1, count = 25) {
   return(.commonIndexEndpoint("variants", page, count))
 }
@@ -92,6 +93,7 @@ getVariant <- function(id) {
 #' @keywords variant, metadata
 #' @examples
 #' getVariantMetadata(id = 1, type = "comments")
+#' getVariantMetadata(id = 1, type = "revisions")
 getVariantMetadata <- function(id, type) {
   return(.commonDetailEndpoint("variants", id, type))
 }
@@ -106,6 +108,7 @@ getVariantMetadata <- function(id, type) {
 #' @keywords evidence items
 #' @examples
 #' getAllEvidenceItems(count = 10)
+#' getAllEvidenceItems(page = 2, count = 10)
 getAllEvidenceItems <- function(page = 1, count = 25) {
   return(.commonIndexEndpoint("evidence_items", page, count))
 }
@@ -133,6 +136,7 @@ getEvidenceItem <- function(id) {
 #' @keywords evidence item, metadata
 #' @examples
 #' getEvidenceItemMetadata(id = 1, type = "comments")
+#' getEvidenceItemMetadata(id = 1, type = "revisions")
 getEvidenceItemMetadata <- function(id, type) {
   return(.commonDetailEndpoint("evidence_items", id, type))
 }
@@ -147,6 +151,7 @@ getEvidenceItemMetadata <- function(id, type) {
 #' @keywords variant groups
 #' @examples
 #' getAllVariantGroups(count = 10)
+#' getAllVariantGroups(page = 2, count = 10)
 getAllVariantGroups <- function(page = 1, count = 25) {
   return(.commonIndexEndpoint("variant_groups", page, count))
 }
@@ -174,6 +179,7 @@ getVariantGroup <- function(id) {
 #' @keywords variant group, metadata
 #' @examples
 #' getVariantGroupMetadata(id = 1, type = "comments")
+#' getVariantGroupMetadata(id = 1, type = "revisions")
 getVariantGroupMetadata <- function(id, type) {
   return(.commonDetailEndpoint("variant_groups", id, type))
 }
@@ -188,6 +194,7 @@ getVariantGroupMetadata <- function(id, type) {
 #' @keywords assertions
 #' @examples
 #' getAllAssertions(count = 10)
+#' getAllAssertions(page = 2, count = 10)
 getAllAssertions <- function(page = 1, count = 25) {
   return(.commonIndexEndpoint("assertions", page, count))
 }
@@ -215,6 +222,7 @@ getAssertion <- function(id) {
 #' @keywords assertion, metadata
 #' @examples
 #' getAssertionMetadata(id = 1, type = "comments")
+#' getAssertionMetadata(id = 1, type = "suggested_changes")
 getAssertionMetadata <- function(id, type) {
   return(.commonDetailEndpoint("assertions", id, type))
 }
@@ -225,11 +233,11 @@ getAssertionMetadata <- function(id, type) {
 #' @param page the page number to retrieve
 #' @param count the number of assertions to retrieve
 .commonIndexEndpoint <- function(type, page, count) {
-  url <- modify_url(baseAPIUrl, path = paste("api", type, sep = "/"))
-  response <- GET(url, accept_json(), userAgent, query = list("page" = page, "count" = count))
+  url <- httr::modify_url(baseAPIUrl, path = paste("api", type, sep = "/"))
+  response <- httr::GET(url, httr::accept_json(), userAgent, query = list("page" = page, "count" = count))
   .verifyJsonResponse(response)
   .handleFailure(response)
-  indexResponse <- content(response, "parsed")
+  indexResponse <- httr::content(response, "parsed")
   return(.createReturnStructure(indexResponse, url, response))
 }
 
@@ -244,11 +252,11 @@ getAssertionMetadata <- function(id, type) {
   if (!is.null(metadataType)) {
     appendedPath <- paste(appendedPath, metadataType, sep = "/")
   }
-  url <- modify_url(baseAPIUrl, path = appendedPath)
+  url <- httr::modify_url(baseAPIUrl, path = appendedPath)
   if (!is.null(queryParameters)) {
-    response <- GET(url, accept_json(), userAgent, query = queryParameters)
+    response <- httr::GET(url, httr::accept_json(), userAgent, query = queryParameters)
   } else {
-    response <- GET(url, accept_json(), userAgent)
+    response <- httr::GET(url, httr::accept_json(), userAgent)
   }
   .verifyJsonResponse(response)
   .handleFailure(response)
@@ -260,12 +268,12 @@ getAssertionMetadata <- function(id, type) {
 #' 
 #' @param response httr error response
 .handleFailure <- function(response) {
-  if (http_error(response)) {
+  if (httr::http_error(response)) {
     errorResponse <- content(response, "parsed")
     stop(
       sprintf(
         "CIViC API request failed [%s]\n%s",
-        status_code(response),
+        httr::status_code(response),
         errorResponse$error
       ),
       call. = FALSE
@@ -277,7 +285,7 @@ getAssertionMetadata <- function(id, type) {
 #' 
 #' @param response httr response
 .verifyJsonResponse <- function(response) {
-  if (http_type(response) != "application/json") {
+  if (httr::http_type(response) != "application/json") {
     stop("CIViC API did not return a JSON", call. = FALSE)
   }
 }

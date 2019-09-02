@@ -19,6 +19,7 @@ Retrieve metadata information for a specific variant from the CIViC DB
 }
 \examples{
 getVariantMetadata(id = 1, type = "comments")
+getVariantMetadata(id = 1, type = "revisions")
 }
 \keyword{metadata}
 \keyword{variant,}

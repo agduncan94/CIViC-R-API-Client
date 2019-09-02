@@ -19,6 +19,7 @@ Retrieve all evidence items from the CIViC DB
 }
 \examples{
 getAllEvidenceItems(count = 10)
+getAllEvidenceItems(page = 2, count = 10)
 }
 \keyword{evidence}
 \keyword{items}

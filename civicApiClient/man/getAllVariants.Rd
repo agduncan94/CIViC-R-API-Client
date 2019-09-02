@@ -19,5 +19,6 @@ Retrieve all variants from the CIViC DB
 }
 \examples{
 getAllVariants(count = 10)
+getAllVariants(page = 2, count = 10)
 }
 \keyword{variants}

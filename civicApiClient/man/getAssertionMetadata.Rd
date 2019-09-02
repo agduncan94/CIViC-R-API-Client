@@ -19,6 +19,7 @@ Retrieve metadata information for a specific variant group from the CIViC DB
 }
 \examples{
 getAssertionMetadata(id = 1, type = "comments")
+getAssertionMetadata(id = 1, type = "suggested_changes")
 }
 \keyword{assertion,}
 \keyword{metadata}

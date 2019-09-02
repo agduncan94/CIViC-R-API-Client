@@ -19,5 +19,6 @@ Retrieve all genes from the CIViC DB
 }
 \examples{
 getAllGenes(count = 10)
+getAllGenes(page = 2, count = 10)
 }
 \keyword{genes}

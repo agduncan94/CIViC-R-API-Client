@@ -1,0 +1,8 @@
+language: r
+
+before_install:
+  - cd civicApiClient
+
+script:
+  - R CMD build .
+  - R CMD check *tar.gz --as-cran

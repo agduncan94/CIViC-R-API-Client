@@ -4,7 +4,7 @@
 \alias{getGeneMetadata}
 \title{Get a specific gene metadata}
 \usage{
-getGeneMetadata(id, type, identifier_type = "civic_id")
+getGeneMetadata(id, type)
 }
 \arguments{
 \item{id}{ID of the gene of interest}
@@ -21,8 +21,7 @@ Retrieve metadata for a specific gene from the CIViC DB
 }
 \examples{
 getGeneMetadata(id = 1, type = "comments")
-getGeneMetadata(id = "ALK", type = "comments", identifier_type = "entrez_symbol")
-getGeneMetadata(id = 238, type = "comments", identifier_type = "entrez_id")
+getGeneMetadata(id = 1, type = "variants")
 }
 \keyword{gene,}
 \keyword{metadata}
