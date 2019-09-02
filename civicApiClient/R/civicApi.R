@@ -48,6 +48,43 @@ getGene <- function(id, identifier_type = "civic_id") {
   return(.createReturnStructure(gene, url, response))
 }
 
+#' Get a list of variants
+#'
+#' Retrieve all variants from the CIViC DB
+#' @param page the page number to retrieve
+#' @param count the number of variants to retrieve
+#' @return An S3 Object of type civic_api containing the content, url, and response
+#' @export
+#' @keywords variants
+#' @examples
+#' getAllVariants(count = 10)
+getAllVariants <- function(page = 1, count = 25) {
+  url <- modify_url(baseAPIUrl, path = "api/variants")
+  response <- GET(url, accept_json(), userAgent, query = list("page" = page, "count" = count))
+  .verifyJsonResponse(response)
+  .handleFailure(response)
+  variants <- content(response, "parsed")
+  return(.createReturnStructure(variants, url, response))
+}
+
+#' Get a specific variant
+#'
+#' Retrieve a specific variant from the CIViC DB
+#' @param id Internal CIViC ID of the variant of interest
+#' @return An S3 Object of type civic_api containing the content, url, and response
+#' @export
+#' @keywords variant
+#' @examples
+#' getVariant(id = 1)
+getVariant <- function(id) {
+  url <- modify_url(baseAPIUrl, path = paste("api/variants", id, sep = "/"))
+  response <- GET(url, accept_json(), userAgent)
+  .verifyJsonResponse(response)
+  .handleFailure(response)
+  variant <- content(response, "parsed")
+  return(.createReturnStructure(variant, url, response))
+}
+
 #' Handle failure case for httr
 #' 
 #' @param response httr error response
