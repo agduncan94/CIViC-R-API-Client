@@ -48,6 +48,9 @@ getGene <- function(id, identifier_type = "civic_id") {
   return(.createReturnStructure(gene, url, response))
 }
 
+#' Handle failure case for httr
+#' 
+#' @param response httr error response
 .handleFailure <- function(response) {
   if (http_error(response)) {
     errorResponse <- content(response, "parsed")
@@ -62,12 +65,21 @@ getGene <- function(id, identifier_type = "civic_id") {
   }
 }
 
+#' Verify that the httr response is of type "application/json"
+#' 
+#' @param response httr response
 .verifyJsonResponse <- function(response) {
   if (http_type(response) != "application/json") {
     stop("CIViC API did not return a JSON", call. = FALSE)
   }
 }
 
+#' Create an s3 return structure for exported functions
+#' 
+#' @param content Content of the response
+#' @param url URL of the request
+#' @param response httr response
+#' @return An S3 Object of type civic_api containing the content, url, and response
 .createReturnStructure <- function(content, url, response) {
   return(structure(
     list(
