@@ -1,5 +1,7 @@
 language: r
-r_github_packages: agduncan94/CIViC-R-API-Client
+
+before_install:
+  - cd civicApiClient
 
 script:
   - R CMD build .
