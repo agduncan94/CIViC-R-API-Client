@@ -14,6 +14,12 @@ Any contribution is much appreciated, whether it be in the form of bug reports o
 ## Bug Reports/Feature Requests
 If you find any bugs or have any feature requests then please create an issue in this repository.
 
+## Building package
+1. Open a terminal and go to `./CIViC-R-API-Client/`
+2. Run `R CMD build civicApiClient`
+3. Run `R CMD INSTALL civicApiClient_<version>.tar.gz`
+4. Check that it passes CRAN checks `R CMD check --as-cran civicApiClient_<version>.tar.gz`
+
 ## Updating documentation
 1. Go to RStudio and open the project
 2. Load devtools `library(devtools)`
