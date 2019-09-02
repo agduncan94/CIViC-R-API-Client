@@ -19,12 +19,7 @@ userAgent <- user_agent("https://github.com/agduncan94/CIViC-R-API-Client")
 #' @examples
 #' getAllGenes(count = 10)
 getAllGenes <- function(page = 1, count = 25) {
-  url <- modify_url(baseAPIUrl, path = "api/genes")
-  response <- GET(url, accept_json(), userAgent, query = list("page" = page, "count" = count))
-  .verifyJsonResponse(response)
-  .handleFailure(response)
-  genes <- content(response, "parsed")
-  return(.createReturnStructure(genes, url, response))
+  return(.commonIndexEndpoint("genes", page, count))
 }
 
 #' Get a specific gene
@@ -59,12 +54,7 @@ getGene <- function(id, identifier_type = "civic_id") {
 #' @examples
 #' getAllVariants(count = 10)
 getAllVariants <- function(page = 1, count = 25) {
-  url <- modify_url(baseAPIUrl, path = "api/variants")
-  response <- GET(url, accept_json(), userAgent, query = list("page" = page, "count" = count))
-  .verifyJsonResponse(response)
-  .handleFailure(response)
-  variants <- content(response, "parsed")
-  return(.createReturnStructure(variants, url, response))
+  return(.commonIndexEndpoint("variants", page, count))
 }
 
 #' Get a specific variant
@@ -77,12 +67,7 @@ getAllVariants <- function(page = 1, count = 25) {
 #' @examples
 #' getVariant(id = 1)
 getVariant <- function(id) {
-  url <- modify_url(baseAPIUrl, path = paste("api/variants", id, sep = "/"))
-  response <- GET(url, accept_json(), userAgent)
-  .verifyJsonResponse(response)
-  .handleFailure(response)
-  variant <- content(response, "parsed")
-  return(.createReturnStructure(variant, url, response))
+  return(.commonDetailEndpoint("variants", id))
 }
 
 #' Get a list of evidence items
@@ -96,12 +81,7 @@ getVariant <- function(id) {
 #' @examples
 #' getAllEvidenceItems(count = 10)
 getAllEvidenceItems <- function(page = 1, count = 25) {
-  url <- modify_url(baseAPIUrl, path = "api/evidence_items")
-  response <- GET(url, accept_json(), userAgent, query = list("page" = page, "count" = count))
-  .verifyJsonResponse(response)
-  .handleFailure(response)
-  evidenceItems <- content(response, "parsed")
-  return(.createReturnStructure(evidenceItems, url, response))
+  return(.commonIndexEndpoint("evidence_items", page, count))
 }
 
 #' Get a specific evidence item
@@ -114,12 +94,7 @@ getAllEvidenceItems <- function(page = 1, count = 25) {
 #' @examples
 #' getEvidenceItem(id = 1)
 getEvidenceItem <- function(id) {
-  url <- modify_url(baseAPIUrl, path = paste("api/evidence_items", id, sep = "/"))
-  response <- GET(url, accept_json(), userAgent)
-  .verifyJsonResponse(response)
-  .handleFailure(response)
-  evidenceItem <- content(response, "parsed")
-  return(.createReturnStructure(evidenceItem, url, response))
+  return(.commonDetailEndpoint("evidence_items", id))
 }
 
 #' Get a list of variant groups
@@ -133,12 +108,7 @@ getEvidenceItem <- function(id) {
 #' @examples
 #' getAllVariantGroups(count = 10)
 getAllVariantGroups <- function(page = 1, count = 25) {
-  url <- modify_url(baseAPIUrl, path = "api/variant_groups")
-  response <- GET(url, accept_json(), userAgent, query = list("page" = page, "count" = count))
-  .verifyJsonResponse(response)
-  .handleFailure(response)
-  variantGroups <- content(response, "parsed")
-  return(.createReturnStructure(variantGroups, url, response))
+  return(.commonIndexEndpoint("variant_groups", page, count))
 }
 
 #' Get a specific variant group
@@ -151,12 +121,7 @@ getAllVariantGroups <- function(page = 1, count = 25) {
 #' @examples
 #' getVariantGroup(id = 1)
 getVariantGroup <- function(id) {
-  url <- modify_url(baseAPIUrl, path = paste("api/variant_groups", id, sep = "/"))
-  response <- GET(url, accept_json(), userAgent)
-  .verifyJsonResponse(response)
-  .handleFailure(response)
-  variantGroup <- content(response, "parsed")
-  return(.createReturnStructure(variantGroup, url, response))
+  return(.commonDetailEndpoint("variant_groups", id))
 }
 
 #' Get a list of assertions
@@ -170,12 +135,7 @@ getVariantGroup <- function(id) {
 #' @examples
 #' getAllAssertions(count = 10)
 getAllAssertions <- function(page = 1, count = 25) {
-  url <- modify_url(baseAPIUrl, path = "api/assertions")
-  response <- GET(url, accept_json(), userAgent, query = list("page" = page, "count" = count))
-  .verifyJsonResponse(response)
-  .handleFailure(response)
-  assertions <- content(response, "parsed")
-  return(.createReturnStructure(assertions, url, response))
+  return(.commonIndexEndpoint("assertions", page, count))
 }
 
 #' Get a specific assertion
@@ -188,12 +148,35 @@ getAllAssertions <- function(page = 1, count = 25) {
 #' @examples
 #' getAssertion(id = 1)
 getAssertion <- function(id) {
-  url <- modify_url(baseAPIUrl, path = paste("api/assertions", id, sep = "/"))
+  return(.commonDetailEndpoint("assertions", id))
+}
+
+#' Handle common index endpoints
+#' 
+#' @param type Type of index endpoint
+#' @param page the page number to retrieve
+#' @param count the number of assertions to retrieve
+.commonIndexEndpoint <- function(type, page, count) {
+  url <- modify_url(baseAPIUrl, path = paste("api", path, sep = "/"))
+  response <- GET(url, accept_json(), userAgent, query = list("page" = page, "count" = count))
+  .verifyJsonResponse(response)
+  .handleFailure(response)
+  indexResponse <- content(response, "parsed")
+  return(.createReturnStructure(indexResponse, url, response))
+}
+
+#' Handle common detail endpoints
+#' 
+#' @param type Type of detail endpoint
+#' @param id The internal CIViC ID
+#' @param count the number of assertions to retrieve
+.commonDetailEndpoint <- function(type, id) {
+  url <- modify_url(baseAPIUrl, path = paste("api", path, id, sep = "/"))
   response <- GET(url, accept_json(), userAgent)
   .verifyJsonResponse(response)
   .handleFailure(response)
-  assertion <- content(response, "parsed")
-  return(.createReturnStructure(assertion, url, response))
+  detailResponse <- content(response, "parsed")
+  return(.createReturnStructure(detailResponse, url, response))
 }
 
 #' Handle failure case for httr
