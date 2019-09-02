@@ -85,6 +85,43 @@ getVariant <- function(id) {
   return(.createReturnStructure(variant, url, response))
 }
 
+#' Get a list of evidence items
+#'
+#' Retrieve all evidence items from the CIViC DB
+#' @param page the page number to retrieve
+#' @param count the number of evidence items to retrieve
+#' @return An S3 Object of type civic_api containing the content, url, and response
+#' @export
+#' @keywords evidence items
+#' @examples
+#' getAllEvidenceItems(count = 10)
+getAllEvidenceItems <- function(page = 1, count = 25) {
+  url <- modify_url(baseAPIUrl, path = "api/evidence_items")
+  response <- GET(url, accept_json(), userAgent, query = list("page" = page, "count" = count))
+  .verifyJsonResponse(response)
+  .handleFailure(response)
+  evidenceItems <- content(response, "parsed")
+  return(.createReturnStructure(evidenceItems, url, response))
+}
+
+#' Get a specific evidence item
+#'
+#' Retrieve a specific evidence item from the CIViC DB
+#' @param id Internal CIViC ID of the evidence item of interest
+#' @return An S3 Object of type civic_api containing the content, url, and response
+#' @export
+#' @keywords evidence item
+#' @examples
+#' getEvidenceItem(id = 1)
+getEvidenceItem <- function(id) {
+  url <- modify_url(baseAPIUrl, path = paste("api/evidence_items", id, sep = "/"))
+  response <- GET(url, accept_json(), userAgent)
+  .verifyJsonResponse(response)
+  .handleFailure(response)
+  evidenceItem <- content(response, "parsed")
+  return(.createReturnStructure(evidenceItem, url, response))
+}
+
 #' Handle failure case for httr
 #' 
 #' @param response httr error response
