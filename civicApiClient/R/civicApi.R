@@ -159,6 +159,43 @@ getVariantGroup <- function(id) {
   return(.createReturnStructure(variantGroup, url, response))
 }
 
+#' Get a list of assertions
+#'
+#' Retrieve all assertions from the CIViC DB
+#' @param page the page number to retrieve
+#' @param count the number of assertions to retrieve
+#' @return An S3 Object of type civic_api containing the content, url, and response
+#' @export
+#' @keywords assertions
+#' @examples
+#' getAllAssertions(count = 10)
+getAllAssertions <- function(page = 1, count = 25) {
+  url <- modify_url(baseAPIUrl, path = "api/assertions")
+  response <- GET(url, accept_json(), userAgent, query = list("page" = page, "count" = count))
+  .verifyJsonResponse(response)
+  .handleFailure(response)
+  assertions <- content(response, "parsed")
+  return(.createReturnStructure(assertions, url, response))
+}
+
+#' Get a specific assertion
+#'
+#' Retrieve a specific assertion from the CIViC DB
+#' @param id Internal CIViC ID of the assertion of interest
+#' @return An S3 Object of type civic_api containing the content, url, and response
+#' @export
+#' @keywords assertion
+#' @examples
+#' getAssertion(id = 1)
+getAssertion <- function(id) {
+  url <- modify_url(baseAPIUrl, path = paste("api/assertions", id, sep = "/"))
+  response <- GET(url, accept_json(), userAgent)
+  .verifyJsonResponse(response)
+  .handleFailure(response)
+  assertion <- content(response, "parsed")
+  return(.createReturnStructure(assertion, url, response))
+}
+
 #' Handle failure case for httr
 #' 
 #' @param response httr error response
