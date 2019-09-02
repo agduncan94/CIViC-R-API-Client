@@ -49,10 +49,8 @@ getGene <- function(id, identifier_type = "civic_id") {
 #' @keywords gene, metadata
 #' @examples
 #' getGeneMetadata(id = 1, type = "comments")
-#' getGeneMetadata(id = "ALK", type = "comments", identifier_type = "entrez_symbol")
-#' getGeneMetadata(id = 238, type = "comments", identifier_type = "entrez_id")
-getGeneMetadata <- function(id, type, identifier_type = "civic_id") {
-  return(.commonDetailEndpoint("genes", id, type, list("identifier_type" = identifier_type)))
+getGeneMetadata <- function(id, type) {
+  return(.commonDetailEndpoint("genes", id, type, NULL))
 }
 
 #' Get a list of variants
@@ -225,11 +223,11 @@ getAssertionMetadata <- function(id, type) {
 #' @param page the page number to retrieve
 #' @param count the number of assertions to retrieve
 .commonIndexEndpoint <- function(type, page, count) {
-  url <- modify_url(baseAPIUrl, path = paste("api", type, sep = "/"))
-  response <- GET(url, accept_json(), userAgent, query = list("page" = page, "count" = count))
+  url <- httr::modify_url(baseAPIUrl, path = paste("api", type, sep = "/"))
+  response <- httr::GET(url, httr::accept_json(), userAgent, query = list("page" = page, "count" = count))
   .verifyJsonResponse(response)
   .handleFailure(response)
-  indexResponse <- content(response, "parsed")
+  indexResponse <- httr::content(response, "parsed")
   return(.createReturnStructure(indexResponse, url, response))
 }
 
@@ -244,11 +242,11 @@ getAssertionMetadata <- function(id, type) {
   if (!is.null(metadataType)) {
     appendedPath <- paste(appendedPath, metadataType, sep = "/")
   }
-  url <- modify_url(baseAPIUrl, path = appendedPath)
+  url <- httr::modify_url(baseAPIUrl, path = appendedPath)
   if (!is.null(queryParameters)) {
-    response <- GET(url, accept_json(), userAgent, query = queryParameters)
+    response <- httr::GET(url, httr::accept_json(), userAgent, query = queryParameters)
   } else {
-    response <- GET(url, accept_json(), userAgent)
+    response <- httr::GET(url, httr::accept_json(), userAgent)
   }
   .verifyJsonResponse(response)
   .handleFailure(response)
@@ -260,12 +258,12 @@ getAssertionMetadata <- function(id, type) {
 #' 
 #' @param response httr error response
 .handleFailure <- function(response) {
-  if (http_error(response)) {
+  if (httr::http_error(response)) {
     errorResponse <- content(response, "parsed")
     stop(
       sprintf(
         "CIViC API request failed [%s]\n%s",
-        status_code(response),
+        httr::status_code(response),
         errorResponse$error
       ),
       call. = FALSE
@@ -277,7 +275,7 @@ getAssertionMetadata <- function(id, type) {
 #' 
 #' @param response httr response
 .verifyJsonResponse <- function(response) {
-  if (http_type(response) != "application/json") {
+  if (httr::http_type(response) != "application/json") {
     stop("CIViC API did not return a JSON", call. = FALSE)
   }
 }

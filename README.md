@@ -1,4 +1,6 @@
 # CIViC DB API Client for R
+[![Build Status](https://travis-ci.org/agduncan94/CIViC-R-API-Client.svg?branch=develop)](https://travis-ci.org/agduncan94/CIViC-R-API-Client)
+
 A simple (unofficial) R package for interacting with the [CIViC DB](https://civicdb.org/home) API.
 
 See the official [CIViC DB API Documentation](https://griffithlab.github.io/civic-api-docs/) for more detailed information on the API.
