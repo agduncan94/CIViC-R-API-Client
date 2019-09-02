@@ -122,6 +122,25 @@ getEvidenceItem <- function(id) {
   return(.createReturnStructure(evidenceItem, url, response))
 }
 
+#' Get a list of variant groups
+#'
+#' Retrieve all variant groups from the CIViC DB
+#' @param page the page number to retrieve
+#' @param count the number of variant groups to retrieve
+#' @return An S3 Object of type civic_api containing the content, url, and response
+#' @export
+#' @keywords variant groups
+#' @examples
+#' getAllVariantGroups(count = 10)
+getAllVariantGroups <- function(page = 1, count = 25) {
+  url <- modify_url(baseAPIUrl, path = "api/variant_groups")
+  response <- GET(url, accept_json(), userAgent, query = list("page" = page, "count" = count))
+  .verifyJsonResponse(response)
+  .handleFailure(response)
+  variantGroups <- content(response, "parsed")
+  return(.createReturnStructure(variantGroups, url, response))
+}
+
 #' Handle failure case for httr
 #' 
 #' @param response httr error response
