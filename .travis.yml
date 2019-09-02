@@ -1,0 +1,6 @@
+language: r
+r_github_packages: agduncan94/CIViC-R-API-Client
+
+script:
+  - R CMD build .
+  - R CMD check *tar.gz --as-cran
