@@ -1,8 +1,5 @@
 language: r
 
-before_install:
-  - cd civicr
-
 script:
   - R CMD build .
   - R CMD check *tar.gz --as-cran
