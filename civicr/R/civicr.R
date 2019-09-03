@@ -246,7 +246,7 @@ getAssertionMetadata <- function(id, type) {
 #' @param type Type of detail endpoint
 #' @param id The internal CIViC ID
 #' @param metadataType Optional type for base detail endpoints
-#' @param metadataType Optional query parameters for base detail endpoints
+#' @param queryParameters Optional query parameters for base detail endpoints
 .commonDetailEndpoint <- function(type, id, metadataType=NULL, queryParameters=NULL) {
   appendedPath <- paste("api", type, id, sep = "/")
   if (!is.null(metadataType)) {
