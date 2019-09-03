@@ -6,7 +6,7 @@ library(jsonlite)
 
 # Set some constants
 baseAPIUrl <- "https://civicdb.org/"
-userAgent <- user_agent("https://github.com/agduncan94/CIViC-R-API-Client")
+userAgent <- user_agent("https://github.com/agduncan94/civicr")
 
 #' Get a list of genes
 #'
