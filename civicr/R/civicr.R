@@ -6,7 +6,7 @@ library(jsonlite)
 
 # Set some constants
 baseAPIUrl <- "https://civicdb.org/"
-userAgent <- user_agent("https://github.com/agduncan94/CIViC-R-API-Client")
+userAgent <- user_agent("https://github.com/agduncan94/civicr")
 
 #' Get a list of genes
 #'
@@ -246,7 +246,7 @@ getAssertionMetadata <- function(id, type) {
 #' @param type Type of detail endpoint
 #' @param id The internal CIViC ID
 #' @param metadataType Optional type for base detail endpoints
-#' @param metadataType Optional query parameters for base detail endpoints
+#' @param queryParameters Optional query parameters for base detail endpoints
 .commonDetailEndpoint <- function(type, id, metadataType=NULL, queryParameters=NULL) {
   appendedPath <- paste("api", type, id, sep = "/")
   if (!is.null(metadataType)) {

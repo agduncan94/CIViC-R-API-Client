@@ -1,5 +1,5 @@
-# CIViC DB API Client for R
-[![Build Status](https://travis-ci.org/agduncan94/CIViC-R-API-Client.svg?branch=develop)](https://travis-ci.org/agduncan94/CIViC-R-API-Client)
+# civicr: CIViC DB API Client for R
+[![Build Status](https://travis-ci.org/agduncan94/civicr.svg?branch=develop)](https://travis-ci.org/agduncan94/civicr)
 
 A simple (unofficial) R package for interacting with the [CIViC DB](https://civicdb.org/home) API.
 
@@ -17,13 +17,13 @@ Any contribution is much appreciated, whether it be in the form of bug reports o
 If you find any bugs or have any feature requests then please create an issue in this repository.
 
 ## Building package
-1. Open a terminal and go to `./CIViC-R-API-Client/`
-2. Run `R CMD build civicApiClient`
-3. Run `R CMD INSTALL civicApiClient_<version>.tar.gz`
-4. Check that it passes CRAN checks `R CMD check --as-cran civicApiClient_<version>.tar.gz`
+1. Open a terminal and go to `./civicr/`
+2. Run `R CMD build civicr`
+3. Run `R CMD INSTALL civicr_<version>.tar.gz`
+4. Check that it passes CRAN checks `R CMD check --as-cran civicr_<version>.tar.gz`
 
 ## Updating documentation
 1. Go to RStudio and open the project
 2. Load devtools `library(devtools)`
-3. Setwd to `./CIViC-R-API-Client/civicApiClient`
+3. Setwd to `./civicr/civicr`
 4. Run document()

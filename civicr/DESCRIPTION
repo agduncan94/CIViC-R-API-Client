@@ -1,4 +1,4 @@
-Package: civicApiClient
+Package: civicr
 Type: Package
 Title: CIViC API Client for R
 Version: 0.1.0
